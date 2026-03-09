@@ -1,4 +1,3 @@
-serviceAccount: projects/project-7f7e50ff-c654-4c24-867/serviceAccounts/todo-service-build-sa@project-7f7e50ff-c654-4c24-867.iam.gserviceaccount.com
 steps:
 
 # Step 1: Build Docker image
@@ -7,7 +6,7 @@ steps:
     [
       'build',
       '-t',
-      'us-central1-docker.pkg.dev/project-7f7e50ff-c654-4c24-867/my-first-artifact-registry/todo-service:$SHORT_SHA',
+      'us-central1-docker.pkg.dev/project-7f7e50ff-c654-4c24-867/my-first-artifact-registry/userservice:$SHORT_SHA',
       '.'
     ]
 
@@ -16,7 +15,7 @@ steps:
   args:
     [
       'push',
-      'us-central1-docker.pkg.dev/project-7f7e50ff-c654-4c24-867/my-first-artifact-registry/todo-service:$SHORT_SHA'
+      'us-central1-docker.pkg.dev/project-7f7e50ff-c654-4c24-867/my-first-artifact-registry/userservice:$SHORT_SHA'
     ]
 
 # Step 3: Deploy to Cloud Run
@@ -25,18 +24,20 @@ steps:
   args:
     [
       'run',
-      'deploy', 'user-service',
-      '--image', 'us-central1-docker.pkg.dev/project-7f7e50ff-c654-4c24-867/my-first-artifact-registry/todo-service:$SHORT_SHA',
-      '--region', 'us-central1',
-      '--platform', 'managed',
-      '--service-account','todo-service-runtime-sa@project-7f7e50ff-c654-4c24-867.iam.gserviceaccount.com',
+      'deploy',
+      'fastapi-api',
+      '--image',
+      'us-central1-docker.pkg.dev/project-7f7e50ff-c654-4c24-867/my-first-artifact-registry/userservice:$SHORT_SHA',
+      '--region',
+      'us-central1',
+      '--platform',
+      'managed',
       '--allow-unauthenticated'
     ]
 
 images:
-- 'us-central1-docker.pkg.dev/project-7f7e50ff-c654-4c24-867/my-first-artifact-registry/todo-service:$SHORT_SHA'
+- 'us-central1-docker.pkg.dev/project-7f7e50ff-c654-4c24-867/my-first-artifact-registry/userservice:$SHORT_SHA'
 
 options:
   logging: CLOUD_LOGGING_ONLY
-
 

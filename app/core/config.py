@@ -1,5 +1,4 @@
 import os
-import logging
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -13,6 +12,7 @@ class Settings:
     ENV: str = os.environ["ENV"]
     SECRET_KEY = os.environ["SECRET_KEY"]
     ALGORITHM = os.environ["ALGORITHM"]
+    ACCESS_TOKEN_EXPIRE_MINUTES = os.environ["ACCESS_TOKEN_EXPIRE_MINUTES"]
 
 
 settings = Settings()

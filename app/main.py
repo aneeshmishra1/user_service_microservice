@@ -1,23 +1,29 @@
 import logging
 import time
 
-from fastapi import FastAPI, Request, Depends
+from fastapi import FastAPI, Request
 
 from app.core.logging_config import setup_logging
 from app.models.models import Base
-from app.routers import todos
+from app.routers import admin
+from app.routers import auth
 from app.db.database import engine
 
 logger = logging.getLogger(__name__)
-Base.metadata.create_all(bind=engine)
+
 app = FastAPI()
 setup_logging()
-app.include_router(todos.router)
+Base.metadata.create_all(bind=engine)
+app.include_router(auth.router)
+app.include_router(admin.router)
 
 
 @app.get("/health")
 def healthy():
     return {"status": "health is OK"}
+
+
+setup_logging()
 
 
 @app.middleware("http")
