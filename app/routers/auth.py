@@ -31,9 +31,9 @@ def get_db():
 
 
 db_dependency = Annotated[Session, Depends(get_db)]
-
 SECRET_KEY = settings.SECRET_KEY
 ALGORITHM = settings.ALGORITHM
+ACCESS_TOKEN_EXPIRE_MINUTES = settings.ACCESS_TOKEN_EXPIRE_MINUTES
 
 
 class CreateUserRequest(BaseModel):
@@ -78,34 +78,14 @@ def authenticate_user(username: str, password: str, db: db_dependency):
     return retrieved_user
 
 
-SECRET_KEY = "super-secret-key"  # use env var in production
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
-
-
-def create_access_token(username: str, user_id: int, role: str, expires_delta: timedelta):
-    encode = {'sub': username, 'id': user_id, 'role': role}
-    expires_delta = datetime.now(timezone.utc) + expires_delta
-    expires_delta = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    encode.update({'exp': expires_delta})
-    return jwt.encode(encode, SECRET_KEY, algorithm=ALGORITHM)
-
-
-async def get_current_user(token: Annotated[str, Depends(oauth2_bearer)]):
-    try:
-        print(f"inside get_current_user() token : {token} at ")
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        username: str = payload.get('sub')
-        user_id: int = payload.get('id')
-        user_role: str = payload.get('role')
-        if username is None or user_id is None:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                                detail="Could not validate user")
-        print(f"inside get_current_user() username: {username}, user_id : {user_id} and user_role : {user_role}")
-        return {"username": username, "user_id": user_id, 'user_role': user_role}
-    except JWTError:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                            detail="Could not validate user")
+def create_access_token(username: str, user_id: int, user_role: str):
+    payload = {
+        "username": username,
+        "user_id": user_id,
+        "user_role": user_role,
+        "exp": datetime.now(timezone.utc) + timedelta(minutes=int(ACCESS_TOKEN_EXPIRE_MINUTES))
+    }
+    return jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
 
 
 @router.post("/token", response_model=Token)
@@ -115,6 +95,24 @@ async def log_in_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm
     if not authenticated_user:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                             detail="Could not validate user")
-    token = create_access_token(authenticated_user.username, authenticated_user.id, authenticated_user.roles,
-                                timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
+    token = create_access_token(authenticated_user.username, authenticated_user.id, authenticated_user.roles)
     return {"access_token": token, "token_type": "bearer"}
+
+
+
+# async def get_current_user(token: Annotated[str, Depends(oauth2_bearer)]):
+#     try:
+#         print(f"inside get_current_user() token : {token} at ")
+#         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+#         username: str = payload.get('sub')
+#         user_id: int = payload.get('id')
+#         user_role: str = payload.get('role')
+#         if username is None or user_id is None:
+#             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+#                                 detail="Could not validate user")
+#         print(f"inside get_current_user() username: {username}, user_id : {user_id} and user_role : {user_role}")
+#         return {"username": username, "user_id": user_id, 'user_role': user_role}
+#     except JWTError:
+#         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+#                             detail="Could not validate user")
+#

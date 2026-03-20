@@ -5,7 +5,6 @@ from fastapi import FastAPI, Request
 
 from app.core.logging_config import setup_logging
 from app.models.models import Base
-from app.routers import admin
 from app.routers import auth
 from app.db.database import engine
 
@@ -15,7 +14,6 @@ app = FastAPI()
 setup_logging()
 Base.metadata.create_all(bind=engine)
 app.include_router(auth.router)
-app.include_router(admin.router)
 
 
 @app.get("/health")

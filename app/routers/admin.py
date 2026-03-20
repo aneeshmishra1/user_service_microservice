@@ -4,15 +4,14 @@ from fastapi import Depends, HTTPException, Path, APIRouter
 from sqlalchemy.orm import Session
 from starlette import status
 from app.db.database import SessionLocal
-#from app.models.models import Todos
-from app.routers.auth import get_current_user
+#from app.routers.auth import get_current_user
 
 logger = logging.getLogger(__name__)
 
-router = APIRouter(
-    prefix="/admin",
-    tags=["admin"],
-)
+# router = APIRouter(
+#     prefix="/admin",
+#     tags=["admin"],
+# )
 
 
 def get_db():
@@ -23,8 +22,8 @@ def get_db():
         db.close()
 
 
-db_dependency = Annotated[Session, Depends(get_db)]
-user_dependency = Annotated[dict, Depends(get_current_user)]
+#db_dependency = Annotated[Session, Depends(get_db)]
+#user_dependency = Annotated[dict, Depends(get_current_user)]
 
 
 # @router.get("/todo", status_code=status.HTTP_200_OK)
