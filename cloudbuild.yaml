@@ -1,4 +1,5 @@
 serviceAccount: projects/project-7f7e50ff-c654-4c24-867/serviceAccounts/user-service-build-sa@project-7f7e50ff-c654-4c24-867.iam.gserviceaccount.com
+
 steps:
 
 # Step 1: Build Docker image

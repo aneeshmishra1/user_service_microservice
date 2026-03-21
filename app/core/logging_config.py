@@ -27,4 +27,3 @@ def setup_logging():
     for logger_name in ("uvicorn", "uvicorn.error", "uvicorn.access"):
         uvicorn_logger = logging.getLogger(logger_name)
         uvicorn_logger.handlers.clear()
-        uvicorn_logger.propagate = True
