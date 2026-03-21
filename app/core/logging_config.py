@@ -30,7 +30,7 @@ def setup_logging():
     root_logger.addHandler(handler)
 
     # Remove default Uvicorn handlers to avoid duplicate logs
-    for logger_name in ("uvicorn", "uvicorn.error", "uvicorn.access"):
+    for logger_name in ("uvicorn", "uvicorn.error", "uvicorn.access", "gunicorn", "gunicorn.error", "gunicorn.access"):
         uvicorn_logger = logging.getLogger(logger_name)
         uvicorn_logger.handlers.clear()
         uvicorn_logger.propagate = False
