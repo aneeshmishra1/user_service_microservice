@@ -32,7 +32,7 @@ async def log_requests(request: Request, call_next):
 
     # Log request start
     logger.info(
-        "Request started",
+        f"Request {request.url.path} started",
         extra={
             "path": request.url.path,
             "method": request.method,
