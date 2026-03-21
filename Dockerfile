@@ -1,5 +1,5 @@
 
-FROM python:3.12-slim
+FROM python:3.11-slim
 
 # Prevent Python from writing pyc files
 ENV PYTHONDONTWRITEBYTECODE=1
@@ -30,4 +30,11 @@ ENV PORT=8080
 
 # ---------- Run Application ----------
 # Use gunicorn with uvicorn workers (recommended for Cloud Run)
-CMD ["gunicorn", "-k", "uvicorn.workers.UvicornWorker", "--bind", "0.0.0.0:8080", "--workers", "2", "--threads", "4", "--timeout", "0", "app.main:app"]
+CMD exec gunicorn \
+  -k uvicorn.workers.UvicornWorker \
+  --bind 0.0.0.0:$PORT \
+  --workers 1 \
+  --threads 4 \
+  --log-level info \
+  --timeout 0 \
+  app.main:app
