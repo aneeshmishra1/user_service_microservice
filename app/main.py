@@ -1,5 +1,7 @@
+import contextvars
 import logging
 import time
+import uuid
 
 from fastapi import FastAPI, Request
 
@@ -16,24 +18,26 @@ Base.metadata.create_all(bind=engine)
 app.include_router(auth.router)
 
 
-@app.get("/health")
-def healthy():
-    return {"status": "health is OK"}
-
-
 setup_logging()
+request_id_ctx_var = contextvars.ContextVar("request_id", default=None)
 
 
 @app.middleware("http")
 async def log_requests(request: Request, call_next):
     start_time = time.time()
+    request_id = str(uuid.uuid4())  # Generate unique request ID
+    request_id_ctx_var.set(request_id)  # Store in context for this request
 
+    # Log request start
     logger.info(
-        "request_started main.py",
+        "Request started",
         extra={
             "path": request.url.path,
             "method": request.method,
             "start_time": start_time,
+            "status_code": None,
+            "duration_ms": None,
+            "request_id": request_id,
         },
     )
 
@@ -41,14 +45,22 @@ async def log_requests(request: Request, call_next):
 
     duration = time.time() - start_time
 
+    # Log request completion
     logger.info(
-        "Request_Completed main.py",
+        "Request completed",
         extra={
             "path": request.url.path,
             "method": request.method,
             "status_code": response.status_code,
             "duration_ms": round(duration * 1000, 2),
+            "start_time": start_time,
+            "request_id": request_id,
         },
     )
 
     return response
+
+
+@app.get("/health")
+def healthy():
+    return {"status": "health is OK"}
