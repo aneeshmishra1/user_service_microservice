@@ -1,6 +1,7 @@
 import logging
 from app.core.config import settings
 
+
 def setup_logging():
     root_logger = logging.getLogger()
     root_logger.setLevel(logging.INFO)
