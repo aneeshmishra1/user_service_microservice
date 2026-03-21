@@ -1,30 +1,34 @@
 import logging
 import time
-import uuid
 
 from fastapi import FastAPI, Request
 
-from app.core.logging_config import setup_logging, request_id_ctx_var
+from app.core.logging_config import setup_logging
 from app.db.database import engine
 from app.models.models import Base
 from app.routers import auth
 
+setup_logging()
 logger = logging.getLogger(__name__)
 
 app = FastAPI()
-setup_logging()
 Base.metadata.create_all(bind=engine)
 app.include_router(auth.router)
 
-setup_logging()
-logger = logging.getLogger("app.main")
+
+@app.on_event("startup")
+async def startup_event():
+    logger.info("user-service app ready and running")
+
+
+@app.on_event("shutdown")
+async def shutdown_event():
+    logger.info("user-service app is shutting down")
 
 
 @app.middleware("http")
 async def log_requests(request: Request, call_next):
     start_time = time.time()
-    request_id = str(uuid.uuid4())  # Generate unique request ID
-    request_id_ctx_var.set(request_id)  # Store in context for this request
 
     # Log request start
     logger.info(

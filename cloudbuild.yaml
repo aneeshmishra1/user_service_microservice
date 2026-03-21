@@ -8,7 +8,7 @@ steps:
     [
       'build',
       '-t',
-      'us-central1-docker.pkg.dev/project-7f7e50ff-c654-4c24-867/my-first-artifact-registry/user-service:$SHORT_SHA',
+      'asia-south1-docker.pkg.dev/project-7f7e50ff-c654-4c24-867/my-first-artifact-registry/user-service:$SHORT_SHA',
       '.'
     ]
 
@@ -17,7 +17,7 @@ steps:
   args:
     [
       'push',
-      'us-central1-docker.pkg.dev/project-7f7e50ff-c654-4c24-867/my-first-artifact-registry/user-service:$SHORT_SHA'
+      'asia-south1-docker.pkg.dev/project-7f7e50ff-c654-4c24-867/my-first-artifact-registry/user-service:$SHORT_SHA'
     ]
 
 # Step 3: Deploy to Cloud Run
@@ -27,8 +27,8 @@ steps:
     [
       'run',
       'deploy', 'user-service',
-      '--image', 'us-central1-docker.pkg.dev/project-7f7e50ff-c654-4c24-867/my-first-artifact-registry/user-service:$SHORT_SHA',
-      '--region', 'us-central1',
+      '--image', 'asia-south1-docker.pkg.dev/project-7f7e50ff-c654-4c24-867/my-first-artifact-registry/user-service:$SHORT_SHA',
+      '--region', 'asia-south1',
       '--platform', 'managed',
       '--service-account','user-service-runtime-sa@project-7f7e50ff-c654-4c24-867.iam.gserviceaccount.com',
       '--allow-unauthenticated',
@@ -36,7 +36,7 @@ steps:
     ]
 
 images:
-- 'us-central1-docker.pkg.dev/project-7f7e50ff-c654-4c24-867/my-first-artifact-registry/user-service:$SHORT_SHA'
+- 'asia-south1-docker.pkg.dev/project-7f7e50ff-c654-4c24-867/my-first-artifact-registry/user-service:$SHORT_SHA'
 
 options:
   logging: CLOUD_LOGGING_ONLY

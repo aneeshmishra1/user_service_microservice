@@ -12,11 +12,11 @@ INSTANCE_CONNECTION_NAME = settings.INSTANCE_CONNECTION_NAME
 connector = Connector()
 
 
-def getconn():
-    print(f'the instance name is : {INSTANCE_CONNECTION_NAME}')
-    print(f'the DB_USER name is : {DB_USER}')
-    print(f'the DB_PASSWORD name is : {DB_PASSWORD}')
-    print(f'the DB_NAME name is : {DB_NAME}')
+def get_conn():
+    print(f'the instance name is: {INSTANCE_CONNECTION_NAME}')
+    print(f'the DB_USER name is: {DB_USER}')
+    print(f'the DB_PASSWORD name is: {DB_PASSWORD}')
+    print(f'the DB_NAME name is: {DB_NAME}')
     return connector.connect(
         INSTANCE_CONNECTION_NAME,
         "pg8000",
@@ -28,7 +28,7 @@ def getconn():
 
 engine = create_engine(
     "postgresql+pg8000://",
-    creator=getconn,
+    creator=get_conn,
     pool_size=5,
     max_overflow=2,
 )
