@@ -47,7 +47,7 @@ async def log_requests(request: Request, call_next):
 
     # Log request completion
     logger.info(
-        "Request completed",
+        f"Request {request.url.path} completed",
         extra={
             "path": request.url.path,
             "method": request.method,
