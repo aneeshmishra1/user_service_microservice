@@ -22,7 +22,7 @@ def get_conn():
         "pg8000",
         user=DB_USER,
         password=DB_PASSWORD,
-        db=DB_NAME,
+        db=DB_NAME
     )
 
 
