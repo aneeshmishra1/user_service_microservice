@@ -26,7 +26,7 @@ COPY . .
 
 
 # Cloud Run provides PORT env variable (default 8080)
-ENV PORT=8080
+#ENV PORT=8080
 
 # ---------- Run Application ----------
 # Use gunicorn with uvicorn workers (recommended for Cloud Run)
